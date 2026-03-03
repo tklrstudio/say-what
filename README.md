@@ -1,6 +1,6 @@
-# transcribe
+# Say What?
 
-Fast local audio/video transcription using OpenAI Whisper. Runs entirely on your machine — nothing is sent to the cloud.
+Fast local audio/video transcription powered by OpenAI Whisper. Runs entirely on your machine — nothing is sent to the cloud.
 
 ## Install
 
@@ -13,22 +13,22 @@ brew install ffmpeg  # macOS (or: sudo apt install ffmpeg)
 
 ```bash
 # Transcribe a meeting recording
-python3 transcribe.py meeting.mp4
+python3 saywhat.py meeting.mp4
 
 # Output as SRT subtitles
-python3 transcribe.py podcast.mp3 --format srt
+python3 saywhat.py podcast.mp3 --format srt
 
 # All formats at once (.txt, .srt, .plain.txt)
-python3 transcribe.py interview.wav --format all
+python3 saywhat.py interview.wav --format all
 
 # Specify language (default: auto-detect)
-python3 transcribe.py call.m4a --language de
+python3 saywhat.py call.m4a --language de
 
 # Use a larger model for better accuracy
-python3 transcribe.py lecture.mkv --model large-v3
+python3 saywhat.py lecture.mkv --model large-v3
 
 # Write output to a specific directory
-python3 transcribe.py audio.wav --output ./transcripts/
+python3 saywhat.py audio.wav --output ./transcripts/
 ```
 
 ## Output formats
