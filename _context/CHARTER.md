@@ -8,7 +8,7 @@
 | **Workspace**  | SW                                                                    |
 | **Created**    | 2026-03-10                                                            |
 | **Version**    | 1.0.0                                                                 |
-| **Origin**     | https://github.com/tklrstudio/say-what.git                           |
+| **Visibility** | Open source || **Origin**     | https://github.com/tklrstudio/say-what.git                           |
 
 ---
 
