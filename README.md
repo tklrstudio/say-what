@@ -1,6 +1,8 @@
 # Say What?
 
-Fast local audio/video transcription powered by OpenAI Whisper. Runs entirely on your machine — nothing is sent to the cloud.
+**AI-powered** local audio/video transcription. Runs a deep learning speech model entirely on your machine — your audio never touches a network, never hits a server, never leaves your device.
+
+> Say What uses [faster-whisper](https://github.com/SYSTRAN/faster-whisper), a quantised implementation of OpenAI's Whisper neural network. It is AI. The difference is where it runs: locally, on your hardware, with zero data transmission.
 
 ## Install
 
@@ -65,11 +67,13 @@ Speed is approximate relative to audio duration on CPU.
 ## How it works
 
 1. Extracts audio from video files using ffmpeg (16kHz mono WAV)
-2. Runs [faster-whisper](https://github.com/SYSTRAN/faster-whisper) (a CTranslate2-optimised port of OpenAI's Whisper)
+2. Runs [faster-whisper](https://github.com/SYSTRAN/faster-whisper) — a CTranslate2-optimised port of OpenAI's Whisper, a transformer neural network trained on 680,000 hours of audio
 3. Filters hallucination artefacts (phantom "Thank you" segments, etc.)
 4. Writes the chosen output format(s)
 
-Everything runs locally. No API keys, no accounts, no data leaves your machine.
+**No API keys. No accounts. No network requests. No data leaves your machine — ever.**
+
+The AI runs on your hardware. That's the whole point.
 
 ## License
 
