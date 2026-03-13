@@ -1,0 +1,9 @@
+{
+  "include": [
+    "_context/"
+  ],
+  "exclude": [],
+  "doc_type_map": {
+    "_context/": "charter"
+  }
+}
