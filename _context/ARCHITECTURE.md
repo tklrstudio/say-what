@@ -1,0 +1,178 @@
+# Say What Architecture
+
+**Purpose:** Visual and structural reference for how Say What works
+**Status:** Living document
+**Created:** 2026-03-17
+**Version:** 1.0.0
+
+---
+
+## The Big Picture
+
+Say What is a single-file CLI tool for local audio/video transcription. No cloud, no API keys, no accounts. Point it at a file, get a transcript. It's the open-source, community-friendly counterpart to TKLR's private Transcriber service.
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                        SAY WHAT                               │
+│                                                              │
+│  python3 saywhat.py input.mp4                                │
+│                                                              │
+│  ┌──────────┐   ┌──────────────┐   ┌──────────────────┐    │
+│  │  Input   │──►│  faster-     │──►│  Output           │    │
+│  │  file    │   │  whisper     │   │                   │    │
+│  │          │   │  (local AI)  │   │  .transcript.txt  │    │
+│  │  MP4     │   │              │   │  .transcript.srt  │    │
+│  │  MP3     │   │  No cloud    │   │  .plain.txt       │    │
+│  │  WAV     │   │  No upload   │   │                   │    │
+│  │  MKV     │   │  No API key  │   │                   │    │
+│  │  ...     │   │              │   │                   │    │
+│  └──────────┘   └──────────────┘   └──────────────────┘    │
+│                                                              │
+│  248 lines of Python · MIT license · Zero infrastructure     │
+└─────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## Processing Pipeline
+
+Four stages, all local.
+
+```
+    Input File (MP4, MP3, WAV, MKV, FLAC, OGG, OPUS)
+         │
+         ▼
+    ┌──────────────────────────────┐
+    │  1. EXTRACT AUDIO             │
+    │                               │
+    │  ffmpeg → 16kHz mono WAV      │
+    │  (skipped if already WAV)     │
+    └──────────────┬───────────────┘
+                   │
+                   ▼
+    ┌──────────────────────────────┐
+    │  2. LOAD MODEL                │
+    │                               │
+    │  faster-whisper               │
+    │  (CTranslate2 backend)        │
+    │                               │
+    │  tiny (75MB) → large-v3 (3GB) │
+    │  Default: medium (1.5GB)      │
+    └──────────────┬───────────────┘
+                   │
+                   ▼
+    ┌──────────────────────────────┐
+    │  3. TRANSCRIBE                │
+    │                               │
+    │  Whisper neural network       │
+    │  + Voice Activity Detection   │
+    │  + Language auto-detection    │
+    │  + Hallucination filtering    │
+    │                               │
+    │  Yields: (start, end, text)   │
+    └──────────────┬───────────────┘
+                   │
+                   ▼
+    ┌──────────────────────────────┐
+    │  4. WRITE OUTPUT              │
+    │                               │
+    │  txt:   [00:01:23 → 00:01:27] │
+    │         Hello everyone        │
+    │                               │
+    │  srt:   1                     │
+    │         00:01:23,456 →        │
+    │         00:01:27,890          │
+    │         Hello everyone        │
+    │                               │
+    │  plain: Hello everyone        │
+    │                               │
+    │  all:   (all three formats)   │
+    └──────────────────────────────┘
+```
+
+---
+
+## Model Options
+
+```
+    ┌──────────┬────────┬────────┬──────────┬──────────────┐
+    │  Model   │  Size  │ Speed  │ Accuracy │ Use Case     │
+    ├──────────┼────────┼────────┼──────────┼──────────────┤
+    │  tiny    │  75 MB │  ~30x  │  Low     │ Quick drafts │
+    │  base    │ 140 MB │  ~15x  │  OK      │ Short clips  │
+    │  small   │ 460 MB │   ~6x  │  Good    │ Most cases   │
+    │  medium  │ 1.5 GB │   ~2x  │  V. good │ Default      │
+    │  large-v3│ 3.0 GB │   ~1x  │  Best    │ High accuracy│
+    └──────────┴────────┴────────┴──────────┴──────────────┘
+
+    Speed = multiple of real-time on CPU
+```
+
+---
+
+## Dependencies
+
+```
+    ┌─────────────────────────────────────────┐
+    │  saywhat.py                              │
+    │  (248 lines, single file)                │
+    │                                          │
+    │  Depends on:                             │
+    │                                          │
+    │  ┌─────────────────────┐                │
+    │  │  faster-whisper      │ pip install    │
+    │  │  (CTranslate2        │                │
+    │  │   optimized Whisper) │                │
+    │  └─────────────────────┘                │
+    │                                          │
+    │  ┌─────────────────────┐                │
+    │  │  ffmpeg              │ brew install   │
+    │  │  (audio extraction)  │                │
+    │  └─────────────────────┘                │
+    │                                          │
+    │  Nothing else. No API keys.              │
+    │  No accounts. No network calls.          │
+    └─────────────────────────────────────────┘
+```
+
+---
+
+## CLI Reference
+
+```
+    python3 saywhat.py input.mp4 [options]
+
+    --format    txt | srt | plain | all    (default: txt)
+    --output    output directory            (default: same as input)
+    --language  language code               (default: auto-detect)
+    --model     tiny|base|small|medium|large-v3  (default: medium)
+    --device    cpu | cuda                  (default: cpu)
+    --compute-type  int8|float16|float32    (default: int8)
+```
+
+---
+
+## What Say What Is NOT
+
+```
+    ┌─────────────────────────────────────────┐
+    │                                          │
+    │  Say What is:                            │
+    │  ✓ A CLI tool                            │
+    │  ✓ Local-only transcription              │
+    │  ✓ Open source (MIT)                     │
+    │  ✓ For anyone                            │
+    │                                          │
+    │  Say What is NOT:                        │
+    │  ✗ Transcriber (TKLR's private service)  │
+    │  ✗ A recording tool                      │
+    │  ✗ A SaaS / cloud service                │
+    │  ✗ A pipeline component                  │
+    │  ✗ Speaker diarization                   │
+    │                                          │
+    └─────────────────────────────────────────┘
+```
+
+---
+
+**End Architecture Document**
