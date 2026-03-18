@@ -75,6 +75,10 @@ Speed is approximate relative to audio duration on CPU.
 
 The AI runs on your hardware. That's the whole point.
 
+## How to Work Here
+
+This project operates within the [living-systems](https://github.com/tklrstudio/living-systems) constitutional framework. Start with `_context/CHARTER.md` for project boundaries, decision criteria, and governance rules.
+
 ## License
 
 MIT
