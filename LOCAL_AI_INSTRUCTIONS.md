@@ -69,17 +69,3 @@ This rule applies to both `repo` and `spec_repo` parameters.
 ---
 
 **End Local AI Instructions — Say What**
-
----
-
-## Merge Strategy
-
-**This is a main-only repo. There are no persistent feature branches.**
-
-- **Always commit and push directly to `main`.** Never create a branch unless the brief explicitly instructs it.
-- **Never reuse an existing remote branch.** If you find yourself on a branch (e.g. from a previous session or a `git checkout`), switch back to `main` before committing: `git checkout main && git pull`.
-- **Do not open a pull request** unless the brief's Scope section explicitly says to and gives a reason.
-
-The only exception: schema changes at Structural or Breaking tier may use a PR as a review gate — but only when the brief says so explicitly.
-
-The default assumption for any brief that does not mention branches or PRs: commit and push directly to `main`.
