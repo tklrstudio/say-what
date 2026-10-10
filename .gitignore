@@ -1,2 +1,11 @@
 .DS_Store
 *.private.md
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+id_rsa*
+id_ed25519*
+.claude/settings.local.json
